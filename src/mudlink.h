@@ -1,5 +1,5 @@
 /*
-mudl.h
+mudlink.h
 
 Modular UART Duplex Link 
 
@@ -153,7 +153,6 @@ class MUDL_Link {
 
     void loadTxBufferWithAck(void){
       // we're stashing at an offset, 
-      #warning this is a lil sus innit ? 
       static const uint8_t preEncodeOffset = 10; 
       txBuffer[0 + preEncodeOffset] = ackingSequenceNum;
       txBuffer[1 + preEncodeOffset] = outgoingMessageSequenceNum;
@@ -261,7 +260,6 @@ class MUDL_Link {
 
       // now if we've loaded the buffer, or was previously loaded, sendy 
       if(txBufferLen){
-        digitalWrite(PIN_LED_R, HIGH);
         noInterrupts();
         size_t fifoAvail = impl->availableForWrite();
         for(size_t i = 0; i < fifoAvail; i ++){
@@ -271,10 +269,10 @@ class MUDL_Link {
             // tx'ing is done, this all resets, 
             txBufferRp = 0;
             txBufferLen = 0; 
+            break; 
           }
         }
         interrupts();
-        digitalWrite(PIN_LED_R, LOW);
       }
     } // end loop() 
 
